@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: posts-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: posts
+  template:
+    metadata:
+      labels:
+        app: posts
+    spec:
+      containers:
+        - name: posts
+          image: yashraj1999/posts
+---
+# here we are building cluster ip. 
+# cluster ip used by pod to communicate with other pod. 
+# if don't put "type" in spec it by default will create clusterIP.
+# we already created node port of posts and so, we need to give name carefully.
+# we are already using name posts-srv in nodeport service
+apiVersion: v1
+kind: Service
+metadata: 
+  name: posts-clusterip-srv
+spec: 
+  selector: 
+    app: posts
+  ports:
+    - name: posts
+      protocol: TCP
+      port: 4000
+      targetPort: 4000

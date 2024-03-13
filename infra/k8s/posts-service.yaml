@@ -1,0 +1,15 @@
+# we need to expose the pod outside the world. that's why we are building service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-srv
+spec:
+  type: NodePort 
+  selector: # we want to expose pod to outside the world and that's why we are using selector. 
+    app: posts
+  ports:
+    - name: posts
+      protocol: TCP
+      port: 4000 # port of our pod
+      targetPort: 4000 # port of our application

@@ -1,0 +1,9 @@
+apiVersion: v1 #k8s is extensible - it comes with preset list of different objects we can create pods and custom objects
+kind: Pod #type of object we want to create
+metadata: #config options for the object we are about to create
+  name: posts # pod name
+spec: #exact attributes we want to apply to object we are about to create
+  containers: # we can create many containers in single pod, it is like array
+    - name: posts # container name, not as important
+      image: yashraj1999/posts
+      imagePullPolicy: IfNotPresent
