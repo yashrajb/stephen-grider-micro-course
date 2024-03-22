@@ -1,8 +1,15 @@
 # Ingress is tool to which will route request to service pod
+# ingress don't route request on the basis of METHODS of API
+# Due to this reason we changed route POST /posts to /posts/create
+# Because GET /posts exists in the post app
+# paths work like switch statement whenever we hit any endpoint
+# it first find out which service is binded with that endpoint
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-srv
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
   rules:
@@ -16,11 +23,35 @@ spec:
                 name: client-srv
                 port:
                   number: 3000
-                  
+          
+          - path: /posts/create
+            pathType: Prefix
+            backend: 
+              service:
+                name: posts-clusterip-srv
+                port: 
+                  number: 4000
+
           - path: /posts
             pathType: Prefix
             backend:
               service:
-                name: posts-clusterip-srv
+                name: query-srv
                 port:
-                  number: 4000
+                  number: 4002
+          
+          - path: /posts/?(.*)/comments
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: comments-srv
+                port:
+                  number: 4001
+          
+          - path: /?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: client-srv
+                port:
+                  number: 3000
