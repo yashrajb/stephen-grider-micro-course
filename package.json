@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^9.1.8",
+    "supertest": "^6.3.4"
+  },
+  "name": "ticketing-app",
+  "description": "- users can lst a ticket an event for sale",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

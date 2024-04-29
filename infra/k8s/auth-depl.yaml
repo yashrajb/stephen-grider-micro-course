@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: yashraj1999/auth
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://auth-mongo-srv:27017/auth'
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret # we are trying to get variable from secrets of kuberenetes
+                  key: JWT_KEY
+---
+# here we are building cluster ip. 
+# cluster ip used by pod to communicate with other pod. 
+# if don't type in spec it by default will create clusterIP.
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: auth-srv
+spec: 
+  selector: 
+    app: auth
+  ports:
+    - name: auth
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
