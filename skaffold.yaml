@@ -10,14 +10,32 @@ build:
             dest: .
       docker:
         dockerfile: Dockerfile
-    - image: yashraj1999/client
-      context: client
-      sync:
-        manual:
-          - src: "**/*.js"
-            dest: .
     - image: yashraj1999/tickets
       context: tickets
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile
+    - image: yashraj1999/orders
+      context: orders
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile
+    - image: yashraj1999/expiration
+      context: expiration
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile
+    - image: yashraj1999/payments
+      context: payments
       sync:
         manual:
           - src: src/**/*.ts
@@ -29,3 +47,10 @@ build:
 manifests:
   rawYaml:
     - ./infra/k8s/*
+
+    # - image: yashraj1999/client
+    #   context: client
+    #   sync:
+    #     manual:
+    #       - src: "**/*.js"
+    #         dest: .

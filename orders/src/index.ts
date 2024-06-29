@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import { natsWrapper } from "./nats-wrapper";
+import { TicketCreatedListener } from "./routes/events/listeners/ticket-created-listener";
+import { TicketUpdatedListener } from "./routes/events/listeners/ticket-updated-listener";
+import { ExpirationCompleteListener } from "./routes/events/listeners/expiration-complete-event";
 
 import { app } from "./app";
 
@@ -27,7 +30,7 @@ const start = async () => {
       process.env.NATS_CLIENT_ID,
       process.env.NATS_URL
     );
-    await mongoose.connect(process.env.MONGO_URI);
+
     const natsClient = natsWrapper.client;
     // we are putting close, SIGINT, SIGTERM callback in index.ts.
     // because, putting process.exit will exit whole program
@@ -39,6 +42,12 @@ const start = async () => {
     });
     process.on("SIGINT", () => natsClient.close());
     process.on("SIGTERM", () => natsClient.close());
+
+    new TicketCreatedListener(natsWrapper.client).listen();
+    new TicketUpdatedListener(natsWrapper.client).listen();
+    new ExpirationCompleteListener(natsWrapper.client).listen();
+
+    await mongoose.connect(process.env.MONGO_URI);
 
     console.log("Connected to MongoDb");
   } catch (err) {

@@ -8,6 +8,7 @@ export default class TIcketCreatedListener extends Listener<TicketCreatedEvent> 
   queueGroupName = "payment-service";
 
   onMessage(data: TicketCreatedEvent["data"], msg: Message): void {
+    console.log(">>>data", data);
     msg.ack();
   }
 }
